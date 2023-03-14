@@ -3,6 +3,7 @@ package webdriver;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -15,7 +16,7 @@ public class Topic_10_Web_Element_Exercise_I {
 	WebDriver driver;
 	String projectPath = System.getProperty("user.dir");
 	String osName = System.getProperty("os.name");
-
+	JavascriptExecutor jsExcutor;
 	@BeforeClass
 	public void beforeClass() {
 		if (osName.contains("Windows")) {
@@ -25,6 +26,8 @@ public class Topic_10_Web_Element_Exercise_I {
 		}
 
 		driver = new FirefoxDriver();
+		
+		jsExcutor = (JavascriptExecutor) driver;
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
 
@@ -150,6 +153,9 @@ public class Topic_10_Web_Element_Exercise_I {
 		
 		// Case 1: Number
 		driver.findElement(By.id("new_password")).sendKeys("123");
+		// scroll tới element
+		jsExcutor.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.id("create-account-enabled")));
+		driver.findElement(By.id("create-account-enabled")).click();
 		sleepInSecond(1);
 		 
 		Assert.assertTrue(driver.findElement(By.cssSelector("li.number-char.completed")).isDisplayed());
