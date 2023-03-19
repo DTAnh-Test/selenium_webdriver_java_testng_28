@@ -6,6 +6,9 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -16,6 +19,9 @@ public class Topic_11_Textbox_Textarea {
 	String projectPath = System.getProperty("user.dir");
 	String osName = System.getProperty("os.name");
 	Random rand = new Random();
+	
+	WebDriverWait expliciWait;
+	
 	String emailAddress = "automation" + rand.nextInt(999)+"@gmail.com";
 	String firstname = "John";
 	String lastname = "Witch";
@@ -31,6 +37,11 @@ public class Topic_11_Textbox_Textarea {
 		}
 
 		driver = new FirefoxDriver();
+		
+		// Trạng thái của element: Huển thị/ không hiển thị/ presence/ staleness
+		expliciWait = new WebDriverWait(driver,30);
+		
+		// Apply cho việc tìm element (findElement, findElements)
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
 
@@ -63,6 +74,7 @@ public class Topic_11_Textbox_Textarea {
 		driver.findElement(By.cssSelector("a.skip-account span.label")).click();
 		driver.findElement(By.cssSelector("a[title='Log Out']")).click();
 		
+		expliciWait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.page-title img")));
 		Assert.assertTrue(driver.findElement(By.cssSelector("div.page-title img")).isDisplayed()); 
 		// findElement(): Cũng là 1 cách wait hay
 		// Ảnh hưởng bởi impliciWait
