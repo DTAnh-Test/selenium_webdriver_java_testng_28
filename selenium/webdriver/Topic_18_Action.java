@@ -4,19 +4,22 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.Color;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class Topic_18_Action_Part_I {
+public class Topic_18_Action {
 	WebDriver driver;
 	Actions action;
+	JavascriptExecutor jsExecutor;
 	String projectPath = System.getProperty("user.dir");
 	String osName = System.getProperty("os.name");
 
@@ -30,6 +33,7 @@ public class Topic_18_Action_Part_I {
 
 		driver = new FirefoxDriver();
 		action = new Actions(driver);
+		jsExecutor = (JavascriptExecutor) driver;
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
 	}
@@ -85,7 +89,7 @@ public class Topic_18_Action_Part_I {
 		Assert.assertEquals(numberSelected.size(), 4);
 	}
 
-	@Test
+//	@Test
 	public void TC_04_Click_And_Hold_Random() {
 		driver.get("https://automationfc.github.io/jquery-selectable/");
 		List<WebElement> allNumber = driver.findElements(By.cssSelector("ol#selectable>li"));
@@ -111,13 +115,77 @@ public class Topic_18_Action_Part_I {
 		Assert.assertEquals(numberSelected.size(), 5);
 	}
 
-	@Test
-	public void TC_05_() {
-
+//	@Test
+	public void TC_05_Double_Click() {
+		driver.get("https://automationfc.github.io/basic-form/index.html");
+		
+		// Firefox nếu các element không nằm trong viewport thì thường không click được
+		if (driver.toString().contains("Firefox")) {
+			// Scroll tới element (Firefox)
+			jsExecutor.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.xpath("//button[text()='Double click me']")));
+		}
+		
+		action.doubleClick(driver.findElement(By.xpath("//button[text()='Double click me']"))).perform();
+		sleepInSecond(3);
+		
+		Assert.assertEquals(driver.findElement(By.xpath("//p[@id='demo']")).getText(), "Hello Automation Guys!");
 	}
 
+//	@Test
+	public void TC_06_Right_Click() {
+		driver.get("http://swisnl.github.io/jQuery-contextMenu/demo.html");
+		
+		// Quit chưa hiển thị
+		Assert.assertFalse(driver.findElement(By.cssSelector("li.context-menu-icon-quit")).isDisplayed());
+		// Right Click vào button
+		action.contextClick(driver.findElement(By.xpath("//span[text()='right click me']"))).perform();
+		sleepInSecond(2);
+		
+		// Hover chuột vào
+		action.moveToElement(driver.findElement(By.cssSelector("li.context-menu-icon-quit"))).perform();
+		sleepInSecond(2);
+		
+		// Quit sẽ update thêm trạng thái hover
+		Assert.assertTrue(driver.findElement(By.cssSelector("li.context-menu-icon-quit.context-menu-hover")).isDisplayed());
+		
+		// Click vào quit
+		action.click(driver.findElement(By.cssSelector("li.context-menu-icon-quit"))).perform();
+		sleepInSecond(2);
+		
+		// Accept alert
+		driver.switchTo().alert().accept();
+		sleepInSecond(2);
+		
+		// Quit chưa hiển thị
+		Assert.assertFalse(driver.findElement(By.cssSelector("li.context-menu-icon-quit")).isDisplayed());
+
+	}
+	
+//	@Test
+	public void TC_07_Drag_Drop_HTML4() {
+		// Drag and drop được list vào những case không nên auto
+		// Những case không nên auto: Captcha/ SMS/ OTP/ Bar Code/ QR Code/ Chart/ Canvas/ Drag Drop/ Game/ Flex/ Flash...
+		// Những trang chuyên chống auto: Google/ Facebook
+		driver.get("https://automationfc.github.io/kendo-drag-drop/");
+		
+		action.dragAndDrop(driver.findElement(By.cssSelector("div#draggable")), driver.findElement(By.cssSelector("div#droptarget"))).perform();
+		sleepInSecond(2);
+		
+		Assert.assertEquals(driver.findElement(By.cssSelector("div#droptarget")).getText(), "You did great!");
+		
+		String targetCircle = driver.findElement(By.cssSelector("div#droptarget")).getCssValue("background-color");
+		// Chuyển từ RGB/ RGBA qua kiểu Color
+		Color targetCircleColor = Color.fromString(targetCircle);
+		// Color có hàm chuyển qua hexa
+		// Nên chuyển qua viết hoa
+		String targetCircleHexa = targetCircleColor.asHex().toUpperCase();
+		// Verify màu background login button 
+		Assert.assertEquals(targetCircleHexa, "#03A9F4");
+	}
+	
 	@Test
-	public void TC_06_() {
+	public void TC_08_Drag_Drop_HTML5() {
+		driver.get("https://automationfc.github.io/drag-drop-html5/");
 
 	}
 	
@@ -132,6 +200,6 @@ public class Topic_18_Action_Part_I {
 	
 	@AfterClass
 	public void afterClass() {
-//		driver.quit();
+		driver.quit();
 	}
 }
