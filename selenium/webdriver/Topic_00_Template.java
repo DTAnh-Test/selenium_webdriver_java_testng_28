@@ -1,5 +1,6 @@
 package webdriver;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -14,7 +15,8 @@ public class Topic_00_Template {
 	WebDriver driver;
 	String projectPath = System.getProperty("user.dir");
 	String osName = System.getProperty("os.name");
-
+	Random rand = new Random();
+	
 	@BeforeClass
 	public void beforeClass() {
 		if (osName.contains("Windows")) {
