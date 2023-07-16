@@ -103,25 +103,6 @@ public class Topic_21_Iframe {
 		
 	}
 
-	@Test
-	public void TC_03_() {
-
-	}
-
-	@Test
-	public void TC_04_() {
-
-	}
-
-	@Test
-	public void TC_05_() {
-
-	}
-
-	@Test
-	public void TC_06_() {
-
-	}
 	@AfterClass
 	public void afterClass() {
 		driver.quit();
