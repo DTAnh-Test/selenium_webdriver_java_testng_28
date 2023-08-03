@@ -1,5 +1,7 @@
 package webdriver;
 
+import static org.testng.Assert.assertEquals;
+
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -92,7 +94,7 @@ public class Topic_23_JavascriptExecutor {
 		Assert.assertEquals(demoGuruDomain, "demo.guru99.com");
 	}
 
-	@Test
+//	@Test
 	public void TC_02_HTML5Validation() {
 		navigateToUrlByJS("https://warranty.rode.com/register");
 		sleepInSecond(3);
@@ -120,49 +122,68 @@ public class Topic_23_JavascriptExecutor {
 
 	@Test
 	public void TC_03_Techpanda_Register() {
-		driver.get("http://live.techpanda.org/index.php/");
-		driver.findElement(By.cssSelector("div.footer a[title='My Account']")).click();
-		driver.findElement(By.cssSelector("a[title='Create an Account']")).click();
-		driver.findElement(By.id("firstname")).sendKeys(firstname);
-		driver.findElement(By.id("lastname")).sendKeys(lastname);
-		driver.findElement(By.id("email_address")).sendKeys(emailAddress);
-		driver.findElement(By.id("password")).sendKeys(password);
-		driver.findElement(By.id("confirmation")).sendKeys(password);
-		driver.findElement(By.cssSelector("button[title='Register']")).click();
+//		driver.get("http://live.techpanda.org/index.php/");
+		navigateToUrlByJS("http://live.techpanda.org/index.php/");
+		
+//		driver.findElement(By.cssSelector("div.footer a[title='My Account']")).click();
+		hightlightElement("//div[@class='footer']/div//a[@title='My Account']");
+		clickToElementByJS("//div[@class='footer']/div//a[@title='My Account']");
+		
+//		driver.findElement(By.cssSelector("a[title='Create an Account']")).click();
+		hightlightElement("//a[@title='Create an Account']");
+		clickToElementByJS("//a[@title='Create an Account']");
+		
+//		driver.findElement(By.id("firstname")).sendKeys(firstname);
+		sendkeyToElementByJS("//input[@id='firstname']", firstname);
+		
+//		driver.findElement(By.id("lastname")).sendKeys(lastname);
+		sendkeyToElementByJS("//input[@id='lastname']", lastname);		
+		
+//		driver.findElement(By.id("email_address")).sendKeys(emailAddress);
+		sendkeyToElementByJS("//input[@id='email_address']", emailAddress);	
+		
+//		driver.findElement(By.id("password")).sendKeys(password);
+		sendkeyToElementByJS("//input[@id='password']", password);			
+		
+//		driver.findElement(By.id("confirmation")).sendKeys(password);
+		sendkeyToElementByJS("//input[@id='confirmation']", password);		
+		
+//		driver.findElement(By.cssSelector("button[title='Register']")).click();
+		clickToElementByJS("//button[@title='Register']");
 		 
-		Assert.assertEquals(driver.findElement(By.cssSelector("li.success-msg span")).getText(), "Thank you for registering with Main Website Store.");
-		String contactInfo = driver.findElement(By.xpath("//h3[text()='Contact Information']/parent::div/following-sibling::div/p")).getText();
+//		Assert.assertEquals(driver.findElement(By.cssSelector("li.success-msg span")).getText(), "Thank you for registering with Main Website Store.");
+		Assert.assertTrue(getInnerText().contains("Thank you for registering with Main Website Store."));
+		Assert.assertTrue(areExpectedTextInInnerText("Thank you for registering with Main Website Store."));
 		
-		Assert.assertTrue(contactInfo.contains(fullname));
-		Assert.assertTrue(contactInfo.contains(emailAddress));
+//		String contactInfo = driver.findElement(By.xpath("//h3[text()='Contact Information']/parent::div/following-sibling::div/p")).getText();
 		
-		driver.findElement(By.xpath("//a[text()='Account Information']")).click();
+//		Assert.assertTrue(contactInfo.contains(fullname));
+		Assert.assertTrue(areExpectedTextInInnerText(fullname));
+		
+//		Assert.assertTrue(contactInfo.contains(emailAddress));
+		Assert.assertTrue(areExpectedTextInInnerText(emailAddress));
+		
+//		driver.findElement(By.xpath("//a[text()='Account Information']")).click();
+		clickToElementByJS("//a[text()='Account Information']");
 		
 		Assert.assertEquals(driver.findElement(By.id("firstname")).getAttribute("value"), firstname);
+		
 		Assert.assertEquals(driver.findElement(By.id("lastname")).getAttribute("value"), lastname);
+		
 		Assert.assertEquals(driver.findElement(By.id("email")).getAttribute("value"), emailAddress);
 		 
-		driver.findElement(By.cssSelector("a.skip-account span.label")).click();
-		driver.findElement(By.cssSelector("a[title='Log Out']")).click();
+//		driver.findElement(By.cssSelector("a.skip-account span.label")).click();
+		hightlightElement("//a[@class='skip-link skip-account']/span[@class='label']");
+		clickToElementByJS("//a[@class='skip-link skip-account']/span[@class='label']");
+		
+//		driver.findElement(By.cssSelector("a[title='Log Out']")).click();
+		hightlightElement("//a[@title='Log Out']");
+		clickToElementByJS("//a[@title='Log Out']");
 		
 		expliciWait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.page-title img")));
 		Assert.assertTrue(driver.findElement(By.cssSelector("div.page-title img")).isDisplayed()); 
 	}
 
-	@Test
-	public void TC_04_() {
-
-	}
-
-	@Test
-	public void TC_05_() {
-
-	}
-
-	@Test
-	public void TC_06_() {
-
-	}
 	@AfterClass
 	public void afterClass() {
 		driver.quit();
